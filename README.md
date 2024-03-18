@@ -4,6 +4,9 @@
 
   1. Was haben wir vor ?
      * [Überblick über unsere 3-Tages-Reise](/training/3-tages-reise.md)
+    
+  1. GIT - Geschichte / Grundlagen
+     * [GIT Pdf](http://schulung.t3isp.de/documents/pdfs/git/git-training.pdf)
 
   1. gitlab ci/cd (Überblick)
      * [Architecture](/gitlab/architecture.md)
