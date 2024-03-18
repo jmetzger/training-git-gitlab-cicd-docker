@@ -2,6 +2,9 @@
 
 ## Agenda 
 
+  1. Was haben wir vor ?
+     * [Überblick über unsere 3-Tage-Ziele](/training/overview-3-days.md)
+
   1. gitlab ci/cd (Überblick)
      * [Architecture](/gitlab/architecture.md)
      * [Overview/Pipelines](/gitlab/01-ci-cd-overview.md)
