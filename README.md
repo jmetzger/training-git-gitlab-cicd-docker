@@ -1,4 +1,4 @@
-# Gitlab CI/CD
+# Training: Von git über gitlab (ci/cd) zum Docker-Image
 
 ## Agenda 
 
