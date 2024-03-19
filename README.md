@@ -7,6 +7,20 @@
     
   1. GIT - Geschichte / Grundlagen
      * [GIT Pdf](http://schulung.t3isp.de/documents/pdfs/git/git-training.pdf)
+
+  1. git - kommandos (Tipps & Tricks) 
+     * [git alias ](alias.md) 
+     * [git add + Tipps & Tricks](add.md)
+     * [git commit](commit.md)
+     * [git log](log.md)
+     * [git config](config.md) 
+     * [git show](show.md)
+     * [Needed commands for starters](started-commands.md)
+     * [git branch](branch.md)
+     * [git checkout](checkout.md)
+     * [git merge](merge.md)
+     * [git tag](tag.md)
+     * [git rm (Dateien löschen aus git)](rm.md)
     
   1. gitlab
 
