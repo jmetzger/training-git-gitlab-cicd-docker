@@ -22,6 +22,9 @@
      * [git tag](tag.md)
      * [git rm (Dateien löschen aus git)](rm.md)
     
+  1. git - Tipps & Tricks
+     * [Schöne logausgabe](beautify-log.md) 
+    
   1. gitlab
 
   1. Docker-Grundlagen 
