@@ -29,6 +29,7 @@
      * [merge-conflict](merge-conflict.md)
     
   1. gitlab
+     * [Exercise merge-request single-teams](merge-request.md)
 
   1. Docker-Grundlagen 
      * [Übersicht Architektur](architektur.md)
