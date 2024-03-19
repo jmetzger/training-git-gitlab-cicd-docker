@@ -23,7 +23,10 @@
      * [git rm (Dateien löschen aus git)](rm.md)
     
   1. git - Tipps & Tricks
-     * [Schöne logausgabe](beautify-log.md) 
+     * [Schöne logausgabe](beautify-log.md)
+    
+  1. git - exercises (merging)
+     * [merge-conflict](merge-conflict.md)
     
   1. gitlab
 
