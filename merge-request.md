@@ -32,6 +32,6 @@ git push -u origin feature/4822
 ```
 git fetch --prune
 git checkout master
-git branch -D feature/4822
 git pull --rebase
+git branch -d feature/4822
 ```
