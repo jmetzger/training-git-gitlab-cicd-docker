@@ -28,6 +28,9 @@
   1. git - exercises (merging)
      * [merge-conflict](merge-conflict.md)
     
+  1. gitlab ci/cd (Überblick)
+     * [Architecture](/gitlab/architecture.md)
+    
   1. gitlab
      * [Exercise merge-request single-teams](merge-request.md)
      * [Exercise merge-request with conflict in group](group-merge-request-conflict.md)
