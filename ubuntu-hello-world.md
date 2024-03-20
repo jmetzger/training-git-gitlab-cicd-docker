@@ -43,9 +43,9 @@ docker login
 user: dockertrainereu 
 pass: --bekommt ihr vom trainer--
 
-# docker push dockertrainereu/<dein-name>-hello-docker 
+docker push dockertrainereu/<dein-name>-hello-docker 
 # z.B. 
-docker push dockertrainereu/jm-hello-docker
+# docker push dockertrainereu/jm-hello-docker
 
 # und wir schauen online, ob wir das dort finden
 
