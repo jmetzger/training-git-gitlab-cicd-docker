@@ -36,7 +36,9 @@ exit
 
 ```
 # Zweiten Container starten
-docker run -d -t --name container-ubuntu2 myubuntu 
+docker run -d -t --name container-ubuntu2 myubuntu
+# ip rausfinden von 2. container 
+docker network inspect bridge 
 ```
 
 ```
