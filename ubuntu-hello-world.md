@@ -20,10 +20,13 @@ CMD ["/hello.sh"]
 ```
 
 
+## Schritt 3:
 
 ```
-## Schritt 3:
-nano hello.sh 
+# nano hello.sh 
+```
+
+```
 #!/bin/bash
 echo hello-docker
 
