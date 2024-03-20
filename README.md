@@ -41,6 +41,9 @@
     
   1. Docker Installation
      * [Installation Docker unter Ubuntu mit Docker Repo](install-docker-ubuntu-apt.md)
+    
+  1. Documentation
+     * [Suche in git](https://docs.gitlab.com/ee/user/search/)
 
 ## Backlog 
 
