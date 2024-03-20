@@ -16,6 +16,9 @@ docker logs <container-name>
 # images die lokal vorhanden 
 docker images 
 
+# configuration des containers
+docker inspect <container-id>
+
 # container (laufende) 
 docker container ls 
 # container (vorhanden, aber beendet)
