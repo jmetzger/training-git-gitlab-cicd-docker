@@ -3,7 +3,8 @@
 ```
 ## Schritt 1:
 cd 
-mkdir Hello-World 
+mkdir Hello-World
+cd Hello-World
 
 ```
 
