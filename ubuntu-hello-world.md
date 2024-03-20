@@ -5,7 +5,7 @@
 cd 
 mkdir Hello-World 
 
-
+```
 ## Schritt 2:
 # nano Dockerfile
 FROM ubuntu:latest 
@@ -14,6 +14,9 @@ COPY hello.sh .
 RUN chmod u+x hello.sh
 CMD ["/hello.sh"]
 
+```
+
+```
 ## Schritt 3:
 nano hello.sh 
 #!/bin/bash
