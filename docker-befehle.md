@@ -9,6 +9,10 @@ docker run <image>
 # hub.docker.com 
 docker run hello-world
 
+# logs anzeigen
+docker logs <container-id>
+docker logs <container-name>
+
 # images die lokal vorhanden 
 docker images 
 
