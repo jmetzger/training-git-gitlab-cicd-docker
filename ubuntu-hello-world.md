@@ -29,8 +29,11 @@ CMD ["/hello.sh"]
 ```
 #!/bin/bash
 echo hello-docker
+```
 
 ## Schritt 4:
+
+```
 docker build -t dockertrainereu/<dein-name>-hello-docker . 
 # Beispiel
 # docker build -t dockertrainereu/jm-hello-docker .
