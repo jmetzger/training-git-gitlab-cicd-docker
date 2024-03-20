@@ -26,7 +26,7 @@ nano hello.sh
 echo hello-docker
 
 ## Schritt 4:
-# docker build -t dockertrainereu/<dein-name>-hello-docker . 
+docker build -t dockertrainereu/<dein-name>-hello-docker . 
 # Beispiel
 # docker build -t dockertrainereu/jm-hello-docker .
 docker run dockertrainereu/<dein-name>-hello-docker 
