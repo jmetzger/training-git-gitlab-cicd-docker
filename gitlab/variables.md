@@ -1,9 +1,36 @@
 # Variablen definieren 
 
+## Variable definieren (Settings -> CI/CD -> Variables) 
+
+```
+TEST_URL
+```
+
+## Variable verwenden 
+
+```
+stages:
+  - build 
+  - test
+  
+show_env:
+  stage: build 
+  script:
+  - echo $TEST_URL
+  - echo $TEST_URL > /tmp/urltest.txt
+
+test_env:
+  stage: test 
+
+  script:
+  - echo $TEST_URL
+```
+
 ## Möglichkeit 1: TopLevel (Im Project) 
 
 ```
 # Settings -> CI/CD -> Variables
+# TEST_URL -> setzen 
 ```
 
 ## Beispiele:
