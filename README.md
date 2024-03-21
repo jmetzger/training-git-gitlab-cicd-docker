@@ -109,6 +109,13 @@
      * [Docker compose local testen](gitlab/docker-compose/01-docker-compose-local-testen.md)
      * [Docker compose über ssh](gitlab/docker-compose/02-docker-compose-ssh.md)
      * [Docker compose classic über scp](gitlab/docker-compose/03-docker-compose-rollout-classic.md)
+
+  1. gitlab - ci/cd - Pipelines strukturieren / Templates 
+     * [Includes mit untertemplates](gitlab/include/pipeline-with-includes.md)
+     * [Parent/Child Pipeline](/gitlab/parent-child-pipeline.md)
+     * [Multiproject Pipeline / Downstream](/gitlab/multiproject-pipeline.md)
+     * [Vorgefertigte Templates verwenden](gitlab/include/templates.md)
+     * [Arbeiten mit extend und anchor - Dinge wiederverwenden](gitlab/cases/extend-and-anchor.md)
       
   1. Documentation (git)
      * [Suche in git](https://docs.gitlab.com/ee/user/search/)
