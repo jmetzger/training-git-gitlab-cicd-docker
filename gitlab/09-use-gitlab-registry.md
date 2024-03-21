@@ -30,6 +30,7 @@ build-image:       # This job runs in the build stage, which runs first.
   services:
      - docker:20.10.10-dind
   script:
+    - ls -la
     - echo "user:"$CI_REGISTRY_USER
     - echo "pass:"$CI_REGISTRY_PASSWORD
     - echo "registry:"$CI_REGISTRY
