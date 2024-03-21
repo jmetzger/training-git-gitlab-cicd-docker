@@ -84,7 +84,34 @@
      * [Logs in docker - compose](docker-compose-logs.md)
      * [docker-compose und replicas](docker-compose-replicas.md)
      * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
-  
+
+  1. gitlab ci/cd (Praxis I) 
+     * [Using the test - template](/gitlab/02-example-testtemplate.md)
+     * [Examples running stages](/gitlab/03-example-running-stages.md) 
+     * [Predefined Vars](/gitlab/04-predefined-vars.md)
+     * [Variablen definieren](/gitlab/variables.md)
+     * [Variablen überschreiben/leeren](gitlab/cases/variablen-ueberschreiben-leeren.md)
+     * [Rules](/gitlab/05-rules.md)
+     * [Example Defining and using artifacts](/gitlab/07-example-defining-and-using-artifacts.md)
+
+  1. gitlab ci/cd docker
+     * [Docker image automatisiert bauen - gitlab registry](/gitlab/09-use-gitlab-registry.md)
+
+  1. gitlab ci/cd (Praxis II)
+     * [Mehrzeile Kommandos in gitlab ci-cd ausführen](/gitlab/jobs/script/multiline.md)
+     * [Kommandos auf Zielsystem mit ssh ausführen (auch multiline)](gitlab/jobs/script/ssh-multiline.md)
+
+  1. gitlab-ci/cd - Workflows
+     * [Workflows + only start by starting pipeline](/gitlab/global/workflow.md)
+     * [Templates for branch and merge request workflow](workflow/templates-branch-merge-request-pipeline.md)
+
+
+    
+  1. Documentation
+     * [Suche in git](https://docs.gitlab.com/ee/user/search/)
+
+## Backlog 
+
   1. Docker Security 
      * [Docker Security](docker/security/overview.md)
      * [Scanning docker image with docker scan/snyx](docker/security/docker-scan-snyk.md) 
@@ -93,11 +120,6 @@
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
      * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
      * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
-    
-  1. Documentation
-     * [Suche in git](https://docs.gitlab.com/ee/user/search/)
-
-## Backlog 
 
   1. gitlab ci/cd (Überblick)
      * [Architecture](/gitlab/architecture.md)
@@ -108,15 +130,6 @@
      * [Warum before_script ?](/gitlab/why-before-script.md)
      * [GIT_STRATEGY usw.](gitlab/git_strategy.md)
   
-  1. gitlab ci/cd (Praxis I) 
-     * [Using the test - template](/gitlab/02-example-testtemplate.md)
-     * [Examples running stages](/gitlab/03-example-running-stages.md) 
-     * [Predefined Vars](/gitlab/04-predefined-vars.md)
-     * [Variablen definieren](/gitlab/variables.md)
-     * [Variablen überschreiben/leeren](gitlab/cases/variablen-ueberschreiben-leeren.md)
-     * [Rules](/gitlab/05-rules.md)
-     * [Example Defining and using artifacts](/gitlab/07-example-defining-and-using-artifacts.md)
-
   1. gitlab ci/cd (Praxis II)
      * [Mehrzeile Kommandos in gitlab ci-cd ausführen](/gitlab/jobs/script/multiline.md)
      * [Kommandos auf Zielsystem mit ssh ausführen (auch multiline)](gitlab/jobs/script/ssh-multiline.md)
@@ -138,9 +151,6 @@
   1. gitlab - wann laufen jobs ? 
      * [Job nur händisch über Pipelines starten](gitlab/rules/only-web.md)
      * [Auch weiterlaufen, wenn Job fehlschlägt](gitlab/jobs/allow_failure.md)
-
-  1. gitlab ci/cd docker
-     * [Docker image automatisiert bauen - gitlab registry](/gitlab/09-use-gitlab-registry.md)
     
   1. gitlab ci/cd docker compose
      * [Docker compose local testen](gitlab/docker-compose/01-docker-compose-local-testen.md)
