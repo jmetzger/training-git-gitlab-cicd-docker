@@ -18,6 +18,9 @@ show_env:
   script:
   - echo $TEST_URL
   - echo $TEST_URL > /tmp/urltest.txt
+  - echo $TEST_PASS
+  - echo $TEST_PASS > /tmp/testpass
+  - cat /tmp/testpass
 
 test_env:
   stage: test 
