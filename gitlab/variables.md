@@ -62,6 +62,8 @@ test_env:
   script:
   - echo "TESTJOB" 
   - echo $TEST_JOB
+  - echo "TESTVAR"
+  - echo $TEST_VAR
 
 ```
 
