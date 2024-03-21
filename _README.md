@@ -1,16 +1,90 @@
-# Gitlab CI/CD
+# Training: Von git über gitlab (ci/cd) zum Docker-Image
 
 
 ## Agenda
+  1. Was haben wir vor ?
+     * [Überblick über unsere 3-Tages-Reise](#überblick-über-unsere-3-tages-reise)
+    
+  1. GIT - Geschichte / Grundlagen
+     * [GIT Pdf](http://schulung.t3isp.de/documents/pdfs/git/git-training.pdf)
+
+  1. git - kommandos (Tipps & Tricks) 
+     * [git alias ](#git-alias-)
+     * [git add + Tipps & Tricks](#git-add-+-tipps--tricks)
+     * [git commit](#git-commit)
+     * [git log](#git-log)
+     * [git config](#git-config)
+     * [git show](#git-show)
+     * [Needed commands for starters](#needed-commands-for-starters)
+     * [git branch](#git-branch)
+     * [git checkout](#git-checkout)
+     * [git merge](#git-merge)
+     * [git tag](#git-tag)
+     * [git rm (Dateien löschen aus git)](#git-rm-dateien-löschen-aus-git)
+    
+  1. git - Tipps & Tricks
+     * [Schöne logausgabe](#schöne-logausgabe)
+    
+  1. git - exercises (merging)
+     * [merge-conflict](#merge-conflict)
+    
   1. gitlab ci/cd (Überblick)
      * [Architecture](#architecture)
-     * [Overview/Pipelines](#overviewpipelines)
-     * [SaaS vs. On-Premise (Self Hosted)](#saas-vs-on-premise-self-hosted)
+    
+  1. gitlab
+     * [Exercise merge-request single-teams](#exercise-merge-request-single-teams)
+     * [Exercise merge-request with conflict in group](#exercise-merge-request-with-conflict-in-group)
 
-  1. Hintergründe
-     * [Warum before_script ?](#warum-before_script-)
-     * [GIT_STRATEGY usw.](#git_strategy-usw)
+  1. Docker-Grundlagen 
+     * [Übersicht Architektur](#übersicht-architektur)
+     * [Was ist ein Container ?](#was-ist-ein-container-)
+     * [Was sind container images](#was-sind-container-images)
+     * [Container vs. Virtuelle Maschine](#container-vs-virtuelle-maschine)
+     * [Was ist ein Dockerfile](#was-ist-ein-dockerfile)
+    
+  1. Docker Installation
+     * [Installation Docker unter Ubuntu mit Docker Repo](#installation-docker-unter-ubuntu-mit-docker-repo)
+
+  1. Docker-Befehle 
+     * [Die wichtigsten Befehle](#die-wichtigsten-befehle)
+     * [Logs anschauen - docker logs - mit Beispiel nginx](#logs-anschauen---docker-logs---mit-beispiel-nginx)
+     * [docker run](#docker-run)
+     * [Docker container/image stoppen/löschen](#docker-containerimage-stoppenlöschen)
+     * [Docker containerliste anzeigen](#docker-containerliste-anzeigen)
+     * [Docker nicht verwendete Images/Container löschen](#docker-nicht-verwendete-imagescontainer-löschen)
+     * [Docker container analysieren](#docker-container-analysieren)
+     * [Docker container in den Vordergrund bringen - attach](#docker-container-in-den-vordergrund-bringen---attach)
+     * [Aufräumen - container und images löschen](#aufräumen---container-und-images-löschen)
+     * [Nginx mit portfreigabe laufen lassen](#nginx-mit-portfreigabe-laufen-lassen)
   
+  1. Dockerfile - Examples 
+     * [Ubuntu mit hello world](#ubuntu-mit-hello-world)
+     * [Ubuntu mit ping](#ubuntu-mit-ping)
+     * [Nginx mit content aus html-ordner](#nginx-mit-content-aus-html-ordner)
+  
+  1. Docker-Netzwerk 
+     * [Netzwerk](#netzwerk)
+  
+  1. Docker-Container Examples 
+     * [2 Container mit Netzwerk anpingen](#2-container-mit-netzwerk-anpingen)
+     * [Container mit eigenem privatem Netz erstellen](#container-mit-eigenem-privatem-netz-erstellen)
+  
+  1. Docker-Daten persistent machen / Shared Volumes 
+     * [Überblick](#überblick)
+     * [Volumes](#volumes)
+     * [bind-mounts](#bind-mounts)
+     * [bind-mounts-permissions](#bind-mounts-permissions)
+     
+  1. Docker Compose
+     * [yaml-format](#yaml-format)
+     * [Ist docker-compose installiert?](#ist-docker-compose-installiert)
+     * [Example with Wordpress / MySQL](#example-with-wordpress--mysql)
+     * [Example with Wordpress / Nginx / MariadB](#example-with-wordpress--nginx--mariadb)
+     * [Example with Ubuntu and Dockerfile](#example-with-ubuntu-and-dockerfile)
+     * [Logs in docker - compose](#logs-in-docker---compose)
+     * [docker-compose und replicas](#docker-compose-und-replicas)
+     * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+
   1. gitlab ci/cd (Praxis I) 
      * [Using the test - template](#using-the-test---template)
      * [Examples running stages](#examples-running-stages)
@@ -20,9 +94,60 @@
      * [Rules](#rules)
      * [Example Defining and using artifacts](#example-defining-and-using-artifacts)
 
+  1. gitlab ci/cd docker
+     * [Docker image automatisiert bauen - gitlab registry](#docker-image-automatisiert-bauen---gitlab-registry)
+
   1. gitlab ci/cd (Praxis II)
      * [Mehrzeile Kommandos in gitlab ci-cd ausführen](#mehrzeile-kommandos-in-gitlab-ci-cd-ausführen)
      * [Kommandos auf Zielsystem mit ssh ausführen (auch multiline)](#kommandos-auf-zielsystem-mit-ssh-ausführen-auch-multiline)
+
+  1. gitlab-ci/cd - Workflows
+     * [Workflows + only start by starting pipeline](#workflows-+-only-start-by-starting-pipeline)
+     * [Templates for branch and merge request workflow](#templates-for-branch-and-merge-request-workflow)
+    
+  1. gitlab ci/cd docker compose
+     * [Docker compose local testen](#docker-compose-local-testen)
+     * [Docker compose über ssh](#docker-compose-über-ssh)
+     * [Docker compose classic über scp](#docker-compose-classic-über-scp)
+      
+  1. Documentation (git)
+     * [Suche in git](https://docs.gitlab.com/ee/user/search/)
+    
+  1. Documentation (gitlab)
+     * [gitlab ci/cd predefined variables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
+     * [.gitlab-ci.yml Reference](https://docs.gitlab.com/ee/ci/yaml/)
+     * [Referenz: global -> workflow](https://docs.gitlab.com/ee/ci/yaml/#workflow)
+     * [Referenz: global -> default](https://docs.gitlab.com/ee/ci/yaml/#default)
+
+  1. Documentation - Includes
+     * [includes](https://docs.gitlab.com/ee/ci/yaml/includes.html)
+     * [includes -> rules](https://docs.gitlab.com/ee/ci/yaml/includes.html#use-rules-with-include)
+     * [includes -> rules -> variables](https://docs.gitlab.com/ee/ci/yaml/#rulesvariables)
+     * [includes -> templates -> override-configuration](https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values)
+     * [includes -> defaults](https://docs.gitlab.com/ee/ci/yaml/includes.html#use-default-configuration-from-an-included-configuration-file)
+    
+  1. Documentation - Instances Limits
+     * [applicaton limits](https://docs.gitlab.com/ee/administration/instance_limits.html)
+
+## Backlog 
+
+  1. Docker Security 
+     * [Docker Security](#docker-security)
+     * [Scanning docker image with docker scan/snyx](#scanning-docker-image-with-docker-scansnyx)
+
+  1. Docker - Dokumentation 
+     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
+     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
+     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+
+  1. gitlab ci/cd (Überblick)
+     * [Architecture](#architecture)
+     * [Overview/Pipelines](#overviewpipelines)
+     * [SaaS vs. On-Premise (Self Hosted)](#saas-vs-on-premise-self-hosted)
+
+  1. Hintergründe
+     * [Warum before_script ?](#warum-before_script-)
+     * [GIT_STRATEGY usw.](#git_strategy-usw)
 
   1. gitlab-ci/cd - Workflows
      * [Workflows + only start by starting pipeline](#workflows-+-only-start-by-starting-pipeline)
@@ -41,9 +166,6 @@
   1. gitlab - wann laufen jobs ? 
      * [Job nur händisch über Pipelines starten](#job-nur-händisch-über-pipelines-starten)
      * [Auch weiterlaufen, wenn Job fehlschlägt](#auch-weiterlaufen-wenn-job-fehlschlägt)
-
-  1. gitlab ci/cd docker
-     * [Docker image automatisiert bauen - gitlab registry](#docker-image-automatisiert-bauen---gitlab-registry)
     
   1. gitlab ci/cd docker compose
      * [Docker compose local testen](#docker-compose-local-testen)
@@ -129,6 +251,2335 @@
   
 
 <div class="page-break"></div>
+
+## Was haben wir vor ?
+
+### Überblick über unsere 3-Tages-Reise
+
+
+![image](https://github.com/jmetzger/training-git-gitlab-cicd-docker/assets/1933318/6678c04e-de58-47c9-b2ac-853db5163a18)
+
+## GIT - Geschichte / Grundlagen
+
+### GIT Pdf
+
+  * http://schulung.t3isp.de/documents/pdfs/git/git-training.pdf
+
+## git - kommandos (Tipps & Tricks) 
+
+### git alias 
+
+### git add + Tipps & Tricks
+
+
+## Trick with -A 
+
+```
+## only adds from the folder you are in recursively 
+## but not above (you might miss some files, when you are in a subfolder 
+git add . 
+
+### Fix -A 
+## adds everything no matter in which folder you are in your project 
+git add -A 
+```
+
+### git commit
+
+
+### commit with multiple lines on commandline (without editor) 
+
+```
+ git commit -am "New entry in todo.txt
+
+* nonsene commit-message becasue of missing text-expertise"
+## enter on last line
+```
+### Change last commit-mesage (description) 
+
+```
+git commit --amend
+## now you can change the description, but you will get a new commit-id 
+```
+
+### git log
+
+
+## Trick with -A 
+
+```
+## only adds from the folder you are in recursively 
+## but not above (you might miss some files, when you are in a subfolder 
+git add . 
+
+### Fix -A 
+## adds everything no matter in which folder you are in your project 
+git add -A 
+```
+
+### git config
+
+### git show
+
+### Needed commands for starters
+
+### git branch
+
+### git checkout
+
+### git merge
+
+### git tag
+
+### git rm (Dateien löschen aus git)
+
+
+### Datei komplett löschen (Workspace und Repo) 
+
+```
+git rm  dateiname  
+```
+
+### Datei nur aus Repo und Index löschen 
+
+```
+git rm --cached dateiname 
+```
+
+## git - Tipps & Tricks
+
+### Schöne logausgabe
+
+
+### Walkthrough 
+
+```
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset \
+-%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
+
+```
+
+### PRETTY FORMATS
+
+  * all documented in git help log (section PRETTY FORMAT)
+  * https://git-scm.com/docs/git-log
+  
+
+## git - exercises (merging)
+
+### merge-conflict
+
+
+### Exercise 
+
+```
+1. You are in master-branch
+2. Checkout new branch feature/4723
+3. Change line1 in todo.txt 
+4. git add -A; git commit -am "feature/4723 done"
+5. Change to master 
+6. Change line1 in todo.txt 
+7. git add -A; git commit -am "change line1 in todo.txt in master" 
+8. git merge feature/4723 
+```
+
+## gitlab ci/cd (Überblick)
+
+### Architecture
+
+
+### Overview 
+
+![image](https://github.com/jmetzger/training-gitlab-ci-cd/assets/1933318/cbd998b1-cb5e-4978-889c-6213eaac2515)
+
+### Components 
+
+```
+GitLab Workhorse
+================
+-> smart reverse proxy 
+GitLab Workhorse is a smart reverse proxy for GitLab. It handles “large” HTTP requests such as file downloads, file uploads, Git push/pull and Git archive downloads.
+
+GitLab Shell
+============
+GitLab Shell handles Git SSH sessions for GitLab and modifies the list of authorized keys. GitLab Shell is not a Unix shell nor a replacement for Bash or Zsh.
+GitLab supports Git LFS authentication through SSH.
+--> Alternative notwendig statt openssh 
+
+When you access the GitLab server over SSH, GitLab Shell then:
+
+1. Limits you to predefined Git commands (git push, git pull, git fetch).
+2. Calls the GitLab Rails API to check if you are authorized, and what Gitaly server your repository is on.
+3. Copies data back and forth between the SSH client and the Gitaly server.
+ 
+Sidekiq (GitLab Rails -> gitlab rails console) 
+======================
+
+Simple, efficient background processing for Ruby.
+
+Sidekiq uses threads to handle many jobs at the same time in the same process. It does not require Rails but will integrate tightly with Rails to make background processing dead simple.
+
+Puma (Gitlab Rails -> gitlab rails console) 
+===================
+Puma is a fast, multi-threaded, and highly concurrent HTTP 1.1 server for Ruby applications. It runs the core Rails application that provides the user-facing features of GitLab.
+
+Gitaly 
+======
+Dein Repo liegt auf einem bestimmten gitaly - Server 
+Gitaly provides high-level RPC access to Git repositories. It is used by GitLab to read and write Git data.
+
+Gitaly is present in every GitLab installation and coordinates Git repository storage and retrieval. Gitaly can be:
+
+A background service operating on a single instance Linux package installation (all of GitLab on one machine).
+Separated onto its own instance and configured in a full cluster configuration, depending on scaling and availability requirements.
+
+```
+
+
+## gitlab
+
+### Exercise merge-request single-teams
+
+
+### Lokal branch  erstellen und pushen
+
+```  
+## Local 
+git checkout -b feature/4822
+ls -la
+touch f1.txt
+git add .
+git commit -am "f1.txt"
+touch f2.txt
+git add .
+git commit -am "f2.txt"
+git push -u origin feature/4822
+```
+ 
+### Online bitbucket / gitlab 
+ 
+```
+## create merge request 
+## and merge 
+```
+
+### Delete branch online after merge 
+
+  * eventually done automatically when checkbox was set
+  * or: delete from branches menu 
+
+### Cleanup locally 
+
+```
+git fetch --prune
+git checkout master
+git pull --rebase
+git branch -d feature/4822
+```
+
+### Exercise merge-request with conflict in group
+
+ 
+ ## Phase 1 
+ 
+ 
+#### Jeder in der Gruppe erstellt lokal ein Feature   
+  
+```  
+## Local 
+## git checkout -b feature/<euer-vorname>
+## e.g. 
+git checkout -b feature/jochen2
+## Zeile 1 todo.txt 
+notepad todo.txt 
+git add -A 
+git commit -am "todo.txt"
+git push -u origin feature/jochen2 
+```
+ 
+#### Online bitbucket / gitlab 
+ 
+```
+## create merge request 
+```
+
+### Phase 2
+
+
+### Online bitbucken - strukturiert mergen 
+```
+## and mergen strukturiert nacheinander 
+## conflict 
+```
+
+### Jetzt conflict lokal lösen 
+
+```
+## in unserem feature branch
+git pull origin master 
+
+## conflict auflösen 
+notepad todo.txt 
+## entscheiden für codeblock 
+
+## ändern kenntlich machen
+git status
+git add todo.txt 
+
+## merge ist fertig 
+git commit 
+
+
+git push
+```
+
+### Online mergen 
+
+```
+### Jetzt dürfte kein Konflikt mehr da sein 
+```
+
+### Delete branch online after merge 
+
+  * eventually done automatically when checkbox was set
+  * or: delete from branches menu 
+
+### Cleanup locally 
+
+```
+git fetch --prune
+git checkout master
+git branch -D feature/<euer-vorname>
+git pull --rebase
+```
+
+
+## Docker-Grundlagen 
+
+### Übersicht Architektur
+
+
+![Docker Architecture - copyright geekflare](https://geekflare.com/wp-content/uploads/2019/09/docker-architecture-609x270.png)
+
+### Was ist ein Container ?
+
+
+```
+- vereint in sich Software
+- Bibliotheken 
+- Tools 
+- Konfigurationsdateien 
+- keinen eigenen Kernel 
+- gut zum Ausführen von Anwendungen auf verschiedenen Umgebungen 
+
+- Container sind entkoppelt
+- Container sind voneinander unabhängig 
+- Können über wohldefinierte Kommunikationskanäle untereinander Informationen austauschen
+
+- Durch Entkopplung von Containern:
+  o Unverträglichkeiten von Bibliotheken, Tools oder Datenbank können umgangen werden, wenn diese von den Applikationen in unterschiedlichen Versionen benötigt werden.
+```
+
+### Was sind container images
+
+
+  * Container Image benötigt, um zur Laufzeit Container-Instanzen zu erzeugen 
+  * Bei Docker werden Docker Images zu Docker Containern, wenn Sie auf einer Docker Engine als Prozess ausgeführt
+  * Man kann sich ein Docker Image als Kopiervorlage vorstellen.
+    * Diese wird genutzt, um damit einen Docker Container als Kopie zu erstellen   
+
+### Container vs. Virtuelle Maschine
+
+
+```
+VM's virtualisieren Hardware
+Container virtualisieren Betriebssystem 
+
+
+```
+
+### Was ist ein Dockerfile
+
+
+ * Textdatei, die Linux - Kommandos enthält
+   * die man auch auf der Kommandozeile ausführen könnte 
+   * Diese erledigen alle Aufgaben, die nötig sind, um ein Image zusammenzustellen
+   * mit docker build wird dieses image erstellt 
+   
+
+## Docker Installation
+
+### Installation Docker unter Ubuntu mit Docker Repo
+
+
+### Walkthrough 
+
+```
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+### Läuft der Dienst (dockerd) 
+
+```
+systemctl status docker 
+```
+
+## Docker-Befehle 
+
+### Die wichtigsten Befehle
+
+
+```
+## docker hub durchsuchen
+docker search hello-world
+
+docker run <image>
+## z.b. // Zieht das image aus docker hub 
+## hub.docker.com 
+docker run hello-world
+
+## logs anzeigen
+docker logs <container-id>
+docker logs <container-name>
+
+## images die lokal vorhanden 
+docker images 
+
+## configuration des containers
+docker inspect <container-id>
+
+## container (laufende) 
+docker container ls 
+## container (vorhanden, aber beendet)
+docker container ls -a 
+
+## z.b hilfe für docker run 
+docker help run 
+
+ 
+
+
+```
+
+### Logs anschauen - docker logs - mit Beispiel nginx
+
+
+### Allgemein 
+```
+## Erstmal nginx starten und container-id wird ausgegeben 
+docker run -d nginx 
+a234
+docker logs a234 # a234 sind die ersten 4 Ziffern der Container ID 
+```
+
+### Laufende Log-Ausgabe 
+
+```
+docker logs -f a234 
+## Abbrechen CTRL + c 
+```
+
+### docker run
+
+
+### Beispiel (binden an ein terminal), detached
+
+```
+## before that we did
+docker pull ubuntu:xenial
+docker run -t -d --name my_xenial ubuntu:xenial
+## will wollen überprüfen, ob der container läuft
+docker container ls 
+## image vorhanden 
+docker images
+
+## in den Container reinwechsel 
+docker exec -it my_xenial bash 
+docker exec -it my_xenial cat /etc/issue
+## 
+
+```
+
+### Docker container/image stoppen/löschen
+
+
+```
+docker stop ubuntu-container 
+## Kill it if it cannot be stopped -be careful
+docker kill ubuntu-container
+
+## Get nur, wenn der Container nicht mehr läuft 
+docker rm ubuntu-container
+
+## oder alternative
+docker rm -f ubuntu-container 
+
+
+## image löschen 
+docker rmi ubuntu:xenial 
+
+## falls Container noch vorhanden aber nicht laufend 
+docker rmi -f ubuntu:xenial 
+
+```
+
+### Docker containerliste anzeigen
+
+
+```
+## besser 
+docker container ls 
+## Alle Container, auch die, die beendet worden sind 
+docker container ls -a 
+
+
+## deprecated 
+docker ps 
+## -a auch solche die nicht mehr laufen 
+docker ps -a
+
+
+
+```
+
+### Docker nicht verwendete Images/Container löschen
+
+### Docker container analysieren
+
+
+```
+docker inspect hello-web # hello-web = container name 
+```
+
+### Docker container in den Vordergrund bringen - attach
+
+
+### docker attach - walkthrough 
+
+```
+docker run -d ubuntu 
+1a4d...
+
+docker attach 1a4d 
+
+## Es ist leider mit dem Aufruf run nicht möglich, den prozess wieder in den Hintergrund zu bringen 
+
+```
+
+### interactiven Prozess nicht beenden (statt exit) 
+
+```
+docker run -it ubuntu bash  
+## ein exit würde jetzt den Prozess beenden
+## exit
+
+## Alternativ ohne beenden (detach) 
+## Geht aber nur beim start mit run -it 
+CTRL + P, dann CTRL + Q 
+
+```
+
+### Reference: 
+
+  * https://docs.docker.com/engine/reference/commandline/attach/
+
+### Aufräumen - container und images löschen
+
+
+### Alle nicht verwendeten container und images löschen 
+
+```
+## Alle container, die nicht laufen löschen 
+docker container prune 
+
+## Alle images, die nicht an eine container gebunden sind, löschen 
+docker images prune 
+
+```
+
+### Nginx mit portfreigabe laufen lassen
+
+
+```
+docker run --name test-nginx -d -p 8080:80 nginx
+
+docker container ls
+lsof -i
+cat /etc/services | grep 8080
+curl http://localhost:8080
+docker container ls
+## wenn der container gestoppt wird, keine ausgabe mehr, weil kein webserver
+docker stop test-nginx 
+curl http://localhost:8080
+
+
+```
+
+## Dockerfile - Examples 
+
+### Ubuntu mit hello world
+
+
+```
+### Schritt 1:
+cd 
+mkdir Hello-World
+cd Hello-World
+
+```
+### Schritt 2
+
+```
+## nano Dockerfile
+FROM ubuntu:latest 
+
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
+```
+
+
+### Schritt 3:
+
+```
+## nano hello.sh 
+```
+
+```
+##!/bin/bash
+echo hello-docker
+```
+
+### Schritt 4:
+
+```
+docker build -t dockertrainereu/<dein-name>-hello-docker . 
+## Beispiel
+## docker build -t dockertrainereu/jm-hello-docker .
+docker run dockertrainereu/<dein-name>-hello-docker 
+
+docker login
+user: dockertrainereu 
+pass: --bekommt ihr vom trainer--
+
+docker push dockertrainereu/<dein-name>-hello-docker 
+## z.B. 
+## docker push dockertrainereu/jm-hello-docker
+
+## und wir schauen online, ob wir das dort finden
+
+```
+
+### Ubuntu mit ping
+
+
+```
+cd
+mkdir myubuntu 
+cd myubuntu/
+```
+
+```
+## nano Dockerfile
+FROM ubuntu:latest
+RUN apt-get update; apt-get install -y inetutils-ping
+CMD ["/bin/bash"]
+```
+
+```
+docker build -t myubuntu .
+docker images
+```
+
+```
+## -t wird benötigt, damit bash WEITER im Hintergrund im läuft.
+## auch mit -d (ohne -t) wird die bash ausgeführt, aber "das Terminal" dann direkt beendet 
+## -> container läuft dann nicht mehr 
+docker run -d -t --name container-ubuntu myubuntu
+docker container ls
+```
+
+```
+### Optional 
+## in den container reingehen mit dem namen des Containers: myubuntu 
+docker exec -it myubuntu bash
+ls -la
+exit
+```
+
+```
+## Zweiten Container starten
+docker run -d -t --name container-ubuntu2 myubuntu
+## ip rausfinden von 2. container 
+docker network inspect bridge 
+```
+
+```
+## In 2. Container mit exec reingehen -> Ersten Container -> 2. anpingen 
+docker exec -it container-ubuntu bash 
+## Jeder container hat eine eigene IP 
+ping 172.17.0.3
+```
+
+### Nginx mit content aus html-ordner
+
+
+### Schritt 1: Simple Example 
+
+```
+## das gleich wie cd ~
+## Heimatverzeichnis des Benutzers root 
+cd
+mkdir nginx-test
+cd nginx-test
+mkdir html
+cd html/
+## vi index.html
+Text, den du rein haben möchtest 
+
+cd ..
+vi Dockerfile 
+
+FROM nginx:latest
+COPY html /usr/share/nginx/html
+
+## nameskürzel z.B. jm1 
+docker build -t dockertrainereu/jm1-hello-web . 
+docker images
+
+```
+
+
+### Schritt 2: Push build 
+
+```
+
+## eventually you are not logged in 
+docker login 
+docker push dockertrainereu/jm1-hello-web 
+##aus spass geloescht
+docker rmi dockertrainereu/jm1-hello-web
+
+```
+
+### Schritt 3: dokcer laufen lassen
+
+```
+## und direkt aus der Registry wieder runterladen 
+docker run --name hello-web -p 8080:80 -d dockertrainereu/jm1-hello-web
+
+## laufenden Container anzeigen lassen
+docker container ls 
+## oder alt: deprecated 
+docker ps 
+
+curl http://localhost:8080 
+
+
+## 
+docker rm -f hello-web 
+
+```
+
+## Docker-Netzwerk 
+
+### Netzwerk
+
+
+### Übersicht
+
+```
+3 Typen 
+
+o none
+o bridge (Standard-Netzwerk) 
+o host 
+
+### Additionally possible to install
+o overlay (needed for multi-node)
+
+```
+
+
+### Kommandos 
+
+```
+## Netzwerk anzeigen 
+docker network ls 
+
+## bridge netzwerk anschauen 
+## Zeigt auch ip der docker container an  
+docker inspect bridge
+
+## im container sehen wir es auch
+docker inspect ubuntu-container 
+
+```
+
+### Eigenes Netz erstellen 
+
+```
+docker network create -d bridge test_net 
+docker network ls 
+
+docker container run -d --name nginx --network test_net nginx
+docker container run -d --name nginx_no_net --network none nginx 
+
+docker network inspect none 
+docker network inspect test_net 
+
+docker inspect nginx 
+docker inspect nginx_no_net 
+
+```
+
+### Netzwerk rausnehmen / hinzufügen 
+
+```
+docker network disconnect none nginx_no_net
+docker network connect test_net nginx_no_net 
+
+### Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
+### d.h. container die das Netzwerk verwenden 
+docker network rm test_net 
+```
+
+
+
+## Docker-Container Examples 
+
+### 2 Container mit Netzwerk anpingen
+
+
+### Container 1:
+
+```
+docker run --name dockerserver1 -dit ubuntu
+```
+
+### Container 2:
+
+```
+docker run --name dockerserver2 -dit ubuntu
+```
+
+### Netzwerk anschauen 
+
+```
+docker network ls
+docker network inspect bridge
+## dockerserver1 - 172.17.0.2
+## dockerserver2 - 172.17.0.3
+```
+
+### Auf einen der Server rauf 
+
+```
+docker container ls
+docker exec -it dockerserver1 bash
+## im container 
+apt update; apt install -y iputils-ping 
+ping 172.17.0.3 
+```
+
+### Container mit eigenem privatem Netz erstellen
+
+
+```
+clear
+## use bridge as type
+## docker network create -d bridge test_net
+## by bridge is default 
+docker network create test_net
+docker network ls
+docker network inspect test_net
+
+## Container mit netzwerk starten 
+docker container run -d --name nginx1 --network test_net nginx
+docker network inspect test_net
+
+## Weiteres Netzwerk (bridged) erstellen
+docker network create demo_net
+docker network connect demo_net nginx1
+
+## Analyse 
+docker network inspect demo_net
+docker inspect nginx1
+
+## Verbindung lösen 
+docker network disconnect demo_net nginx1
+
+## Schauen, wir das Netz jetzt aussieht 
+docker network inspect demo_net
+
+```
+
+## Docker-Daten persistent machen / Shared Volumes 
+
+### Überblick
+
+
+### Overview 
+
+```
+bind-mount  # not recommended 
+volumes
+tmpfs 
+```
+
+### Disadvantags 
+
+```
+stored only on one node
+Does not work well in cluster
+
+
+```
+
+### Alternative for cluster 
+
+```
+glusterfs
+cephfs 
+nfs 
+
+## Stichwort
+ReadWriteMany 
+
+
+```
+
+### Volumes
+
+
+### Storage volumes verwalten 
+
+```
+docker volume ls
+docker volume create test-vol
+docker volume ls
+docker volume inspect test-vol
+```
+
+### Storage volumes in container einhängen
+
+```
+docker run -it --name=container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
+1234ad# touch /test_data/README 
+exit
+## stops container
+```
+
+```
+## Container löschen und data prüfen
+docker rm container-test-vol
+ls -la /var/lib/docker/volumes/test-vol/_data/
+```
+
+```
+## create new container and check for /test_data/README 
+docker run -it --name=container-test-vol2 --mount target=/test_data,source=test-vol ubuntu bash
+ab45# ls -la /test_data/README 
+```
+
+### Storage volume löschen 
+
+```
+## Zunächst container löschen 
+docker rm container-test-vol 
+docker rm container-test-vol2
+docker volume rm test-vol
+```
+
+### bind-mounts
+
+### bind-mounts-permissions
+
+## Docker Compose
+
+### yaml-format
+
+
+```
+## Kommentare 
+
+## Listen 
+- rot
+- gruen
+- blau 
+
+## Mappings 
+Version: 3.7 
+
+## Mappings können auch Listen enthalten 
+expose: 
+  - "3000"
+  - "8000" 
+
+## Verschachtelte Mappings 
+build:
+  context: .
+  labels: 
+    label1: "bunt"
+    label2: "hell" 
+
+```
+
+### Ist docker-compose installiert?
+
+
+```
+## besser. mehr infos
+docker compose version 
+docker compose --version 
+
+```
+
+### Example with Wordpress / MySQL
+
+
+```
+clear
+cd
+mkdir wp
+cd wp
+nano docker-compose.yml
+```
+
+```
+## docker-compose.yaml
+version: "3.7"
+
+services:
+  database:
+    image: mysql:5.7
+    volumes:
+      - database_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - database
+    ports:
+      - 8080:80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wordpress_plugins:/var/www/html/wp-content/plugins
+      - wordpress_themes:/var/www/html/wp-content/themes
+      - wordpress_uploads:/var/www/html/wp-content/uploads
+
+volumes:
+  database_data:
+  wordpress_plugins:
+  wordpress_themes:
+  wordpress_uploads:
+
+
+```
+
+### Example with Wordpress / Nginx / MariadB
+
+
+```
+mkdir wmdc
+cd wmdc
+```
+
+```
+## nano docker-compose.yml 
+version: "3.7"
+
+services:
+    database:
+        image: mysql:5.7
+        volumes:
+            - database_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: mypassword
+            MYSQL_DATABASE: wordpress
+            MYSQL_USER: wordpress
+            MYSQL_PASSWORD: wordpress
+
+    wordpress:
+        image: wordpress:latest
+        depends_on:
+            - database
+        ports:
+            - 8080:80
+        restart: always
+        environment:
+            WORDPRESS_DB_HOST: database:3306
+            WORDPRESS_DB_USER: wordpress
+            WORDPRESS_DB_PASSWORD: wordpress
+        volumes:
+            - wordpress_plugins:/var/www/html/wp-content/plugins
+            - wordpress_themes:/var/www/html/wp-content/themes
+            - wordpress_uploads:/var/www/html/wp-content/uploads
+volumes:
+    database_data:
+    wordpress_plugins:
+    wordpress_themes:
+    wordpress_uploads:
+```
+
+```
+### now start the system
+docker compose up -d 
+### we can do some test if db is reachable 
+docker exec -it wmdc_compose_wordpress_1 bash
+```
+
+```
+### within shell do 
+apt update 
+apt-get install -y telnet
+## this should work 
+telnet database 3306
+```
+
+```
+## and we even have logs
+docker compose logs 
+```
+
+### Example with Ubuntu and Dockerfile
+
+
+```
+cd
+mkdir bautest
+cd bautest 
+```
+
+```
+## nano docker-compose.yml
+version: "3.8"
+
+services:
+  myubuntu:
+    build: ./myubuntu
+    restart: always
+```
+
+```
+mkdir myubuntu 
+cd myubuntu 
+## nano Dockerfile 
+FROM ubuntu:latest
+RUN apt-get update; apt-get install -y inetutils-ping
+CMD ["/bin/bash"]
+```
+
+```
+cd ../
+## wichtig, im docker-compose - Ordner seiend 
+##pwd 
+##~/bautest
+docker-compose up -d 
+## wird image gebaut und container gestartet 
+
+## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
+docker-compose up -d --build 
+```
+
+### Logs in docker - compose
+
+
+```
+##Im Ordner des Projektes
+##z.B wordpress-mysql-compose-project 
+cd ~/wordpress-mysql-compose-project 
+docker-compose logs
+## jetzt werden alle logs aller services angezeigt 
+```
+
+### docker-compose und replicas
+
+
+### Beispiel 
+
+```
+version: "3.9"
+services:
+  redis:
+    image: redis:latest
+    deploy:
+      replicas: 1
+    configs:
+      - my_config
+      - my_other_config
+configs:
+  my_config:
+    file: ./my_config.txt
+  my_other_config:
+    external: true
+```
+### Ref:
+
+  * https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+### docker compose Reference
+
+  * https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+## gitlab ci/cd (Praxis I) 
+
+### Using the test - template
+
+
+### Example Walkthrough 
+
+```
+## Schritt 1: Neues Repo aufsetzen 
+
+## Setup a new repo 
+## Setting:
+
+## o Public, dann bekommen wir mehr Rechenzeit 
+## o  No deployment planned 
+## o No SAST 
+## o Add README.md 
+
+## Using naming convention 
+## Name it however you want, but have you tln - nr inside 
+## e.g.
+## test-artifacts-tln1
+
+
+## Schritt 2: Ein Standard-Template als Ausgangsbasis holen 
+## Get default ci-Template 
+Build -> Pipeline - Editor
+
+## Es erscheint der Editor mit einem Test-Template  
+
+
+1x speichern und committen.
+
+## Jetzt wird es in der Pipeline ausgeführt. 
+
+
+```
+
+### Examples running stages
+
+
+### Running default stages 
+
+  * build, test, deploy are stages set by default 
+
+```
+## No stages defined, so build, test and deploy are run 
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 1
+    - echo "Code coverage is 90%"
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+```
+
+### only run some 
+
+```
+## einfaches stages - keyword ergänzen und die stages die man haben will 
+stages:
+  - build
+  - deploy
+
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+
+## unit-test-job wurde gelöscht 
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+
+```
+
+ * Danach sich die Pipelines anschauen (CI/CD -> Pipeline) 
+
+### Predefined Vars
+
+
+### Example to show them 
+
+```
+stages:
+  - build 
+  
+show_env:
+  stage: build 
+  script:
+    - env 
+    - pwd 
+
+
+```
+
+
+
+### Reference 
+
+  * https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+
+### Variablen definieren
+
+
+### Settings Variable definieren (Settings -> CI/CD -> Variables) 
+
+```
+TEST_URL
+```
+
+### Variable verwenden 
+
+```
+stages:
+  - build 
+  - test
+  
+show_env:
+  stage: build 
+  script:
+  - echo $TEST_URL
+  - echo $TEST_URL > /tmp/urltest.txt
+  - echo $TEST_PASS
+  - echo $TEST_PASS > /tmp/testpass
+  - cat /tmp/testpass
+
+test_env:
+  stage: test 
+
+  script:
+  - echo $TEST_URL
+```
+
+### Beispiele: (Global) 
+
+```
+## gitlab-ci.yml
+variables:
+  TEST_URL: http://schulung.t3isp.de # globalen Scope - in der gesamten Pipeline
+                                     # Überschreibt NICHT -> ... Settings -> CI/CD -> Variables   
+  TEST_VERSION: "1.0" # global 
+  TEST_VAR: "overwrite?" 
+
+stages:
+  - build 
+  - test
+  
+show_env:
+  stage: build 
+
+  variables:
+    TEST_JOB: lowrunner # variable mit lokalem Scope - nur in Job 
+    TEST_VAR: "neu ueberschrieben"
+
+  script:
+  - echo $TEST_URL 
+  - echo $TEST_VERSION
+  - echo $TEST_JOB # nur lokal 
+  - echo $TEST_VAR
+
+test_env:
+  stage: test 
+
+  script:
+  - echo "TESTJOB" 
+  - echo $TEST_JOB
+  - echo "TESTVAR"
+  - echo $TEST_VAR
+
+```
+
+### Reihenfolge, welche Variablen welche überschreien (Ebenene) 
+
+  * https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+
+### Variablen überschreiben/leeren
+
+
+### gitlab-ci.yml 
+
+```
+default:
+  image: alpine
+
+
+variables:
+  VAR_GLOBAL: "meine globale var"
+
+.base:
+  script: test
+  variables:
+    VAR1: base var 1
+
+job-test3:
+  extends: .base
+  variables: {} ## globale variable sollte danach eigentlich leer sein !! 
+  script:
+   - echo $VAR1
+   - echo "global->"$VAR_GLOBAL
+
+job-test4:
+  extends: .base
+  variables: null
+  script:
+  - echo $VAR1
+
+```
+
+### Rules
+
+
+### CI_PIPELINE_SOURCE 
+
+  * https://gitlab.com/training.tn1/jochen-siegen1/-/jobs/4867098253
+
+
+### Ref:
+
+  * https://docs.gitlab.com/ee/ci/jobs/job_control.html#specify-when-jobs-run-with-rules
+
+### Example Defining and using artifacts
+
+
+### What is it ? 
+
+```
+Jobs can output an archive of files and directories. This output is known as a job artifact.
+You can download job artifacts by using the GitLab UI or the API.
+```
+
+### Example 1: Creating an artifact 
+
+```
+## .gitlab-ci.yml 
+
+stages: 
+  - build 
+
+create_txt:
+  stage: build 
+  script:
+    - echo "hello" > ergebnis.txt 
+  artifacts:
+    paths:
+      - ergebnis.txt
+
+```
+
+### Example 2: creating artifacts with wildcards and different name 
+
+```
+
+## .gitlab-ci.yml 
+stages: 
+  - build 
+create_txt:
+  stage: build 
+  script:
+    - mkdir -p path/my-xyz    
+    - echo "hello" > path/my-xyz/ergebnis.txt
+    - mkdir -p path/some-xyz
+    - echo "some" > path/some-xyz/testtext.txt
+  artifacts:
+    name: meine-daten 
+    paths:
+      - path/*xyz/*
+
+```
+
+### Example 3: Artifakte und Name aus Variable vergeben 
+
+  * If your branch-name contains forward slashes
+    * (for example feature/my-feature) 
+    * it’s advised to use $CI_COMMIT_REF_SLUG instead of $CI_COMMIT_REF_NAME 
+      * for proper naming of the artifact.
+
+```
+## .gitlab-ci.yml 
+stages: 
+  - build 
+create_txt:
+  stage: build 
+  script:
+    - mkdir -p path/my-xyz    
+    - echo "hello" > path/my-xyz/ergebnis.txt
+    - mkdir -p path/some-xyz
+    - echo "some" > path/some-xyz/testtext.txt
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME" 
+    paths:
+      - path/*xyz/*
+
+
+```
+
+### Example 4: Alle files in einem Verzeichnis recursive 
+
+```
+## .gitlab-ci.yml 
+stages: 
+  - build 
+create_txt:
+  stage: build 
+  script:
+    - mkdir -p path/my-xyz    
+    - echo "toplevel" > path/you-got-it.txt
+    - echo "hello" > path/my-xyz/ergebnis.txt
+    - mkdir -p path/some-xyz
+    - echo "some" > path/some-xyz/testtext.txt 
+  artifacts:
+    paths:
+      - path/
+
+
+```
+
+### Example 5: Artifakte und Bedingungen 
+
+```
+## nur artifact erstellen, wenn ein commit-tag gesetzt ist. 
+## Gibt es kein commit-tag ist diese Variable NICHT GESETZT. 
+
+
+### .gitlab-ci.yml 
+stages: 
+  - build 
+
+output_something:
+  stage: build
+  script:
+    - echo "just writing something"
+    - env
+    - echo "CI_COMMIT_TAG:..$CI_COMMIT_TAG.."
+
+create_txt:
+  stage: build 
+  script:
+    - mkdir -p path/my-xyz    
+    - echo "toplevel" > path/you-got-it.txt
+    - echo "hello" > path/my-xyz/ergebnis.txt
+    - mkdir -p path/some-xyz
+    - echo "some" > path/some-xyz/testtext.txt 
+    - env
+    - echo "TAG ? $CI_COMMIT_TAG" 
+  artifacts:
+    paths:
+      - path/
+
+  rules:
+    - if: $CI_COMMIT_TAG
+
+```
+
+  * Test 1: committen und Pipeline beobachten 
+  * Test 2: Tag über repository > Tags erstellen und nochmal Pipeline beobachten  
+
+
+
+### Passing 1: Passing artifacts between stages (enabled by default) 
+
+```
+default:
+  image: ubuntu:22.04
+
+## stages are set to build, test, deploy by default 
+stages:
+  - build
+  - test
+  - deploy 
+
+build:
+  stage: build
+  script:
+    - echo "in building..." >> ./control.txt
+  artifacts:
+    paths:
+    - control.txt
+    expire_in: 1 week
+
+my_unit_test:
+  stage: test
+  script:
+    - ls
+    - cat control.txt
+    - echo "now in unit testing ..." >> ./control.txt
+  artifacts:
+    paths:
+    - control.txt
+    expire_in: 1 week
+
+deploy:
+  stage: deploy
+  script:
+    - ls
+    - cat control.txt
+
+```
+
+### Passing 2: artifacts between stages (enabled by default) - only writing it in stage: build 
+
+```
+## only change in stage: build 
+image: ubuntu:20.04
+
+## stages are set to build, test, deploy by default 
+
+build:
+  stage: build
+  script:
+    - echo "in building..." >> ./control.txt
+  artifacts:
+    paths:
+    - control.txt
+    expire_in: 1 week
+
+my_unit_test:
+  stage: test
+  script:
+    - cat control.txt
+
+deploy:
+  stage: deploy
+  script:
+    - ls
+    - cat control.txt
+
+
+
+```
+
+### Passing 3: artifacts (+ommitting test - stage) 
+
+  * You can decide in which state you need the artifacts 
+
+```
+## only change in stage: build 
+image: ubuntu:20.04
+
+## stages are set to build, test, deploy by default 
+
+build:
+  stage: build
+  script:
+    - echo "in building..." >> ./control.txt
+  artifacts:
+    paths:
+    - control.txt
+    expire_in: 1 week
+
+my_unit_test:
+  stage: test
+  dependencies: []
+  script:
+    - ls -la 
+    - echo "no control.txt here"
+    - ls -la 
+
+deploy:
+  stage: deploy
+  script:
+    - ls
+    - cat control.txt
+```
+
+
+### Using the gitlab - artifacts api 
+
+
+
+#### API - Reference:
+
+  * https://docs.gitlab.com/ee/api/job_artifacts.html
+
+
+
+### Reference:
+
+  * https://docs.gitlab.com/ee/ci/pipelines/job_artifacts.html
+
+## gitlab ci/cd docker
+
+### Docker image automatisiert bauen - gitlab registry
+
+
+### good.sh 
+
+```
+##!/bin/bash
+date
+```
+
+### Dockerfile - RootLevel 
+
+```
+FROM ubuntu:22.04
+## 
+RUN  apt-get update && \
+     apt-get install -y openssh-client  && \
+     rm -rf /var/lib/apt/lists/*
+COPY good.sh /usr/local/bin/better.sh
+```
+
+### Variante 1:  .gitlab-ci.yml (Version with docker-dind (docker-in-docker)
+
+```
+stages:          # List of stages for jobs, and their order of execution
+  - build
+
+build-image:       # This job runs in the build stage, which runs first.
+  stage: build
+  image: docker:20.10.10
+  services:
+     - docker:20.10.10-dind
+  script:
+    - ls -la
+    - echo "user:"$CI_REGISTRY_USER
+    - echo "pass:"$CI_REGISTRY_PASSWORD
+    - echo "registry:"$CI_REGISTRY
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker images
+    - docker push $CI_REGISTRY_IMAGE
+    - echo "BUILD for $CI_REGISTRY_IMAGE done"
+```
+
+### Variante 2: kaniko (rootless from google) 
+
+```
+build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - echo $CI_COMMIT_TAG
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+  rules:
+    - if: $CI_COMMIT_TAG
+```
+
+### Reference:
+
+  *  https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
+
+## gitlab ci/cd (Praxis II)
+
+### Mehrzeile Kommandos in gitlab ci-cd ausführen
+
+
+### Step 1: 
+
+ * Create new repo
+
+### Step 2: create good.sh next to README.md
+
+  * Create file good.sh in repo root-level 
+
+```
+##!/bin/bash
+
+echo "good things start now"
+ls -la
+date
+```
+
+### Step 3: create gitlab-ci.yml with Pipeline Editor 
+
+```
+stages:
+  - build 
+
+workflow:
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "web"
+
+build-stage:
+  stage: build
+  variables:
+    CMD: |
+      echo hello-you; 
+      ls -la;
+  script: 
+  - echo "execute script from git repo"
+  - bash -s < good.sh
+  - echo -n $CMD
+  - echo "eval the command"
+  - bash -c "$CMD"
+  - |-
+      bash -s << HEREDOC
+        echo hello 
+        ls -la
+      HEREDOC
+  - |
+      tr a-z A-Z << END_TEXT
+        one two three
+        four five six
+      END_TEXT 
+  - |
+      bash -s << HEREDOC
+        echo hello 
+        ls -la
+      HEREDOC
+  - |-
+      tr a-z A-Z << END_TEXT
+        one two three
+        four five six
+      END_TEXT
+  - >
+      echo "First command line
+      is split over two lines."
+
+      echo "Second command line."
+ 
+
+```
+
+### Run Pipeline (need to trigger manually) 
+
+
+
+### Reference 
+
+
+### Reference:
+
+  * https://docs.gitlab.com/ee/ci/yaml/script.html#split-long-commands
+  * https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines/21699210#21699210
+
+### Kommandos auf Zielsystem mit ssh ausführen (auch multiline)
+
+
+### Preparation on Server 
+
+#### Step 1: Create public/private key 
+
+```
+## on destinationn server
+ssh-keygen
+cd .ssh
+ls -la
+```
+
+#### Step 2: Add id_rsa.pub /Public key to authorized_keys 
+
+```
+cat id_rsa.pub >> authorized_keys
+```
+
+#### Step 3: Add id_rsa (private key) to GITLAB ci/cd -> Settings -> CI/CD as new Variable 
+```
+cat id_rsa
+## copy content and add as content to new variable SERVER_SSH_KEY
+## DO not set variable as protected 
+```
+
+### create good.sh in root-folder of repo (git) 
+
+```
+##!/bin/bash
+
+echo "good things start now"
+ls -la
+date
+
+```
+
+### Create gitlab-ci.yml 
+
+```
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:          # List of stages for jobs, and their order of execution
+  - deploy 
+  
+deploy-job:
+  
+   stage: deploy   
+   image: ubuntu 
+
+   variables:
+    CMD: |
+      echo hello-you; 
+      ls -la;
+
+   before_script:
+    - apt -y update
+    - apt install -y openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SERVER_SSH_KEY" | tr -d '\r' | ssh-add -
+    - ls -la
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+##- echo $SERVER_SSH_KEY
+
+   script:
+     - echo 'V1 - commands in line'
+     ############### ! Important 
+     # For ssh to exit on error, start your commands with first command set -e 
+     # - This will exit the executed on error with return - code > 0
+     # - AND will throw an error from ssh and in pipeline  
+     ###############
+     - ssh root@$SERVER_IP -C "set -e; ls -la; cd $SERVER_WEBDIR; ls -la;"
+     - echo 'V2 - content of Variable $CMD'
+     - ssh root@$SERVER_IP -C $CMD
+     - echo 'V3 - script locally - executed remotely'
+     - ssh root@$SERVER_IP < good.sh
+     - echo 'V4 - script in heredoc'
+     - |
+      ssh root@$SERVER_IP bash -s << HEREDOC
+        echo "hello V4"
+        ls -la
+      HEREDOC
+     - echo 'V5 - copy script and execute'
+     - scp good.sh root@$SERVER_IP:/usr/local/bin/better.sh
+     - ssh root@$SERVER_IP -C "chmod u+x /usr/local/bin/better.sh; better.sh"
+
+```
+
+## gitlab-ci/cd - Workflows
+
+### Workflows + only start by starting pipeline
+
+
+### What for ? 
+  * Configure how pipelines behaves
+
+### Only start pipeline by starting it with pipeline run (manually) 
+
+```
+## only: web geht hier nicht, aber das steht eigentlich für:
+## '$CI_PIPELINE_SOURCE == "web"'
+stages:
+  - build 
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+build-stage:
+  stage: build  
+  script: 
+    - echo "hello build"
+    - echo "$CI_PIPELINE_SOURCE"
+
+```
+
+### More information about possible values for $CI_PIPELINE_SOURCE 
+
+  * https://docs.gitlab.com/ee/ci/jobs/job_control.html#common-if-clauses-for-rules
+
+### Templates for branch and merge request workflow
+
+
+```
+merge_request_event 
+https://docs.gitlab.com/ee/ci/pipelines/merge_request_pipelines.html
+
+merge_request_pipeline 
+Alternatively, you can configure your pipeline to run every time you make changes to the source branch for a merge request. This type of pipeline is called a merge request pipeline.
+
+https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+(not default)
+
+branch_pipeline 
+You can configure your pipeline to run every time you commit changes to a branch. This type of pipeline is called a branch pipeline.
+(default)
+
+https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/Branch-Pipelines.gitlab-ci.yml
+
+```
+
+## gitlab ci/cd docker compose
+
+### Docker compose local testen
+
+
+
+
+### Evolutions-Phase 1: Testen eines docker compose file lokal auf unserem Zielsysem
+
+```
+## public/private key muss eingerichtet sein
+ssh root@<ziel-ip>
+```
+
+#### Docker installieren 
+
+```
+sudo apt-get update
+sudo apt-get -y install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+```
+### Läuft der Dienst (dockerd) 
+systemctl status docker 
+```
+
+
+```
+mkdir cms
+cd cms
+nano docker-compose.yaml
+```
+
+```
+services:
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    # If you really want to use MySQL, uncomment the following line
+    #image: mysql:8.0.27
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - 80:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+volumes:
+  db_data:
+  wp_data:
+
+```
+
+```
+docker compose up -d
+```
+
+### Docker compose über ssh
+
+
+### Evolutions-Phase 2: Anwenden eines Docker Compose files über ssh 
+
+#### Vorbereitung: Im Repo cms/docker-compose.yaml einfügen 
+
+```
+services:
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - 80:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+volumes:
+  db_data:
+  wp_data:
+```
+
+#### Schritt 1: gitlab-ci.yaml 
+
+```
+
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:          # List of stages for jobs, and their order of execution
+  - deploy 
+
+deploy-job:
+   stage: deploy   
+   image: ubuntu 
+  
+   before_script:
+    - apt-get -y update
+    - apt-get install -y openssh-client ca-certificates curl gnupg lsb-release
+    - mkdir -p /etc/apt/keyrings
+    # We want the newest version from docker
+    # version from ubuntu repo does not work (docker compose) - version too old 
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg   
+    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update -y
+    - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    - eval $(ssh-agent -s)
+    - echo "$SERVER_SSH_KEY" | tr -d '\r' | ssh-add -
+    - ls -la
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    # - echo $SERVER_SSH_KEY
+    # eventually not needed
+    #- echo $SERVER_SSH_KEY >  ~/.ssh/id_rsa
+    #- chmod 600 ~/.ssh/id_rsa 
+
+   script:
+     - echo 'Deploying wordpress'
+     - cd cms
+     - export DOCKER_HOST="ssh://root@$TOMCAT_SERVER_IP"
+     - docker info
+     - docker container ls
+     - docker compose up -d
+
+```
+
+
+### Docker compose classic über scp
+
+
+### Evolutions-Phase 3: 
+
+#### Vorbereitung: 
+
+  * SSH_SERVER_KEY (private key), SERVER_IP als Variablen in Settings -> CI/CD angelegt werden. 
+
+#### Schritt 1: cms/docker-compose.yaml in gitlab anlegen 
+
+```
+services:
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+      - 33060
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - 80:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+volumes:
+  db_data:
+  wp_data:
+```
+
+#### Schritt 2: gitlab-ci.yaml 
+
+```
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:          # List of stages for jobs, and their order of execution
+  - deploy 
+
+deploy-job:
+   stage: deploy   
+   image: ubuntu 
+  
+   before_script:
+    - apt-get -y update
+    - apt-get install -y openssh-client 
+    - eval $(ssh-agent -s)
+    - echo "$SERVER_SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    #- echo $SERVER_SSH_KEY
+    # eventually not neededrsa 
+
+   script:
+     - echo 'Deploying wordpress'
+
+     - |
+       ssh root@$SERVER_IP bash -s << HEREDOC
+        cd
+        mkdir -p cms 
+       HEREDOC 
+     - scp cms/docker-compose.yaml root@$SERVER_IP:~/cms/
+     - ssh root@$SERVER_IP -C "cd; cd cms; docker compose up -d"
+
+```
+
+#### Schritt 3: Pipeline manuell über pipeline menü starten 
+
+## Documentation (git)
+
+### Suche in git
+
+  * https://docs.gitlab.com/ee/user/search/
+
+## Documentation (gitlab)
+
+### gitlab ci/cd predefined variables
+
+  * https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+
+### .gitlab-ci.yml Reference
+
+  * https://docs.gitlab.com/ee/ci/yaml/
+
+### Referenz: global -> workflow
+
+  * https://docs.gitlab.com/ee/ci/yaml/#workflow
+
+### Referenz: global -> default
+
+  * https://docs.gitlab.com/ee/ci/yaml/#default
+
+## Documentation - Includes
+
+### includes
+
+  * https://docs.gitlab.com/ee/ci/yaml/includes.html
+
+### includes -> rules
+
+  * https://docs.gitlab.com/ee/ci/yaml/includes.html#use-rules-with-include
+
+### includes -> rules -> variables
+
+  * https://docs.gitlab.com/ee/ci/yaml/#rulesvariables
+
+### includes -> templates -> override-configuration
+
+  * https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+
+### includes -> defaults
+
+  * https://docs.gitlab.com/ee/ci/yaml/includes.html#use-default-configuration-from-an-included-configuration-file
+
+## Documentation - Instances Limits
+
+### applicaton limits
+
+  * https://docs.gitlab.com/ee/administration/instance_limits.html
+
+## Docker Security 
+
+### Docker Security
+
+### Scanning docker image with docker scan/snyx
+
+## Docker - Dokumentation 
+
+### Vulnerability Scanner with docker
+
+  * https://docs.docker.com/engine/scan/#prerequisites
+
+### Vulnerability Scanner mit snyk
+
+  * https://snyk.io/plans/
+
+### Parent/Base - Image bauen für Docker
+
+  * https://docs.docker.com/develop/develop-images/baseimages/
 
 ## gitlab ci/cd (Überblick)
 
@@ -487,673 +2938,6 @@ fatal: fetch --all does not make sense with refspecs
 So all does not work here, because we fetch a specific branch with refspec
 ```
 
-## gitlab ci/cd (Praxis I) 
-
-### Using the test - template
-
-
-### Example Walkthrough 
-
-```
-## Schritt 1: Neues Repo aufsetzen 
-
-## Setup a new repo 
-## Setting:
-
-## o Public, dann bekommen wir mehr Rechenzeit 
-## o  No deployment planned 
-## o No SAST 
-## o Add README.md 
-
-## Using naming convention 
-## Name it however you want, but have you tln - nr inside 
-## e.g.
-## test-artifacts-tln1
-
-
-## Schritt 2: Ein Standard-Template als Ausgangsbasis holen 
-## Get default ci-Template 
-Build -> Pipeline - Editor
-
-## Es erscheint der Editor mit einem Test-Template  
-
-
-1x speichern und committen.
-
-## Jetzt wird es in der Pipeline ausgeführt. 
-
-
-```
-
-### Examples running stages
-
-
-### Running default stages 
-
-  * build, test, deploy are stages set by default 
-
-```
-## No stages defined, so build, test and deploy are run 
-
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
-
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
-  script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 1
-    - echo "Code coverage is 90%"
-
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
-```
-
-### only run some 
-
-```
-## einfaches stages - keyword ergänzen und die stages die man haben will 
-stages:
-  - build
-  - deploy
-
-
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
-
-## unit-test-job wurde gelöscht 
-
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
-
-```
-
- * Danach sich die Pipelines anschauen (CI/CD -> Pipeline) 
-
-### Predefined Vars
-
-
-### Example to show them 
-
-```
-stages:
-  - build 
-  
-show_env:
-  stage: build 
-  script:
-    - env 
-    - pwd 
-
-
-```
-
-
-
-### Reference 
-
-  * https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
-
-### Variablen definieren
-
-
-### Möglichkeit 1: TopLevel (Im Project) 
-
-```
-## Settings -> CI/CD -> Variables
-```
-
-### Beispiele:
-
-```
-## gitlab-ci.yml
-variables:
-  TEST_URL: http://schulung.t3isp.de # globalen Scope - in der gesamten Pipeline
-                                     # Überschreibt NICHT -> ... Settings -> CI/CD -> Variables   
-  TEST_VERSION: "1.0" # global 
-  TEST_ENV: Prod # global
-  TEST_VAR: "overwrite?" 
-
-stages:
-  - build 
-  - test
-  
-show_env:
-  stage: build 
-
-  variables:
-    TEST_JOB: lowrunner # variable mit lokalem Scope - nur in Job 
-    TEST_URL: http://www.test.de # Auch das überschreibt NICHT -> ... Settings -> CI/CD -> Variables 
-
-  script:
-  - echo $TEST_VAR
-  - echo $TEST_MASKED
-  - echo $TEST_URL
-  - echo $TEST_URL > /tmp/urltest.txt
-  - cat /tmp/urltest.txt
-  - echo $TEST_CONTENT # tolle Sache
-  - cat $TEST_CONTENT
-  - echo $TEST_VERSION
-  - echo $TEST_ENV
-  - echo $TEST_JOB
-
-test_env:
-  stage: test 
-
-  script:
-  - echo $TEST_URL
-  - echo $TEST_CONTENT # tolle Sache
-  - cat $TEST_CONTENT
-  - echo $TEST_VERSION
-  - echo $TEST_ENV
-  - echo $TEST_JOB
-
-
-
-
-
-
-
-```
-
-### Reihenfolge, welche Variablen welche überschreien (Ebenene) 
-
-  * https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
-
-### Variablen überschreiben/leeren
-
-
-### gitlab-ci.yml 
-
-```
-default:
-  image: alpine
-
-
-variables:
-  VAR_GLOBAL: "meine globale var"
-
-.base:
-  script: test
-  variables:
-    VAR1: base var 1
-
-job-test3:
-  extends: .base
-  variables: {} ## globale variable sollte danach eigentlich leer sein !! 
-  script:
-   - echo $VAR1
-   - echo "global->"$VAR_GLOBAL
-
-job-test4:
-  extends: .base
-  variables: null
-  script:
-  - echo $VAR1
-
-```
-
-### Rules
-
-
-### CI_PIPELINE_SOURCE 
-
-  * https://gitlab.com/training.tn1/jochen-siegen1/-/jobs/4867098253
-
-
-### Ref:
-
-  * https://docs.gitlab.com/ee/ci/jobs/job_control.html#specify-when-jobs-run-with-rules
-
-### Example Defining and using artifacts
-
-
-### What is it ? 
-
-```
-Jobs can output an archive of files and directories. This output is known as a job artifact.
-You can download job artifacts by using the GitLab UI or the API.
-```
-
-### Example 1: Creating an artifact 
-
-```
-## .gitlab-ci.yml 
-
-stages: 
-  - build 
-
-create_txt:
-  stage: build 
-  script:
-    - echo "hello" > ergebnis.txt 
-  artifacts:
-    paths:
-      - ergebnis.txt
-
-```
-
-### Example 2: creating artifacts with wildcards and different name 
-
-```
-
-## .gitlab-ci.yml 
-stages: 
-  - build 
-create_txt:
-  stage: build 
-  script:
-    - mkdir -p path/my-xyz    
-    - echo "hello" > path/my-xyz/ergebnis.txt
-    - mkdir -p path/some-xyz
-    - echo "some" > path/some-xyz/testtext.txt
-  artifacts:
-    name: meine-daten 
-    paths:
-      - path/*xyz/*
-
-```
-
-### Example 3: Artifakte und Name aus Variable vergeben 
-
-  * If your branch-name contains forward slashes
-    * (for example feature/my-feature) 
-    * it’s advised to use $CI_COMMIT_REF_SLUG instead of $CI_COMMIT_REF_NAME 
-      * for proper naming of the artifact.
-
-```
-## .gitlab-ci.yml 
-stages: 
-  - build 
-create_txt:
-  stage: build 
-  script:
-    - mkdir -p path/my-xyz    
-    - echo "hello" > path/my-xyz/ergebnis.txt
-    - mkdir -p path/some-xyz
-    - echo "some" > path/some-xyz/testtext.txt
-  artifacts:
-    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME" 
-    paths:
-      - path/*xyz/*
-
-
-```
-
-### Example 4: Alle files in einem Verzeichnis recursive 
-
-```
-## .gitlab-ci.yml 
-stages: 
-  - build 
-create_txt:
-  stage: build 
-  script:
-    - mkdir -p path/my-xyz    
-    - echo "toplevel" > path/you-got-it.txt
-    - echo "hello" > path/my-xyz/ergebnis.txt
-    - mkdir -p path/some-xyz
-    - echo "some" > path/some-xyz/testtext.txt 
-  artifacts:
-    paths:
-      - path/
-
-
-```
-
-### Example 5: Artifakte und Bedingungen 
-
-```
-## nur artifact erstellen, wenn ein commit-tag gesetzt ist. 
-## Gibt es kein commit-tag ist diese Variable NICHT GESETZT. 
-
-
-### .gitlab-ci.yml 
-stages: 
-  - build 
-
-output_something:
-  stage: build
-  script:
-    - echo "just writing something"
-    - env
-    - echo "CI_COMMIT_TAG:..$CI_COMMIT_TAG.."
-
-create_txt:
-  stage: build 
-  script:
-    - mkdir -p path/my-xyz    
-    - echo "toplevel" > path/you-got-it.txt
-    - echo "hello" > path/my-xyz/ergebnis.txt
-    - mkdir -p path/some-xyz
-    - echo "some" > path/some-xyz/testtext.txt 
-    - env
-    - echo "TAG ? $CI_COMMIT_TAG" 
-  artifacts:
-    paths:
-      - path/
-
-  rules:
-    - if: $CI_COMMIT_TAG
-
-```
-
-  * Test 1: committen und Pipeline beobachten 
-  * Test 2: Tag über repository > Tags erstellen und nochmal Pipeline beobachten  
-
-
-
-### Passing 1: Passing artifacts between stages (enabled by default) 
-
-```
-default:
-  image: ubuntu:22.04
-
-## stages are set to build, test, deploy by default 
-stages:
-  - build
-  - test
-  - deploy 
-
-build:
-  stage: build
-  script:
-    - echo "in building..." >> ./control.txt
-  artifacts:
-    paths:
-    - control.txt
-    expire_in: 1 week
-
-my_unit_test:
-  stage: test
-  script:
-    - ls
-    - cat control.txt
-    - echo "now in unit testing ..." >> ./control.txt
-  artifacts:
-    paths:
-    - control.txt
-    expire_in: 1 week
-
-deploy:
-  stage: deploy
-  script:
-    - ls
-    - cat control.txt
-
-```
-
-### Passing 2: artifacts between stages (enabled by default) - only writing it in stage: build 
-
-```
-## only change in stage: build 
-image: ubuntu:20.04
-
-## stages are set to build, test, deploy by default 
-
-build:
-  stage: build
-  script:
-    - echo "in building..." >> ./control.txt
-  artifacts:
-    paths:
-    - control.txt
-    expire_in: 1 week
-
-my_unit_test:
-  stage: test
-  script:
-    - cat control.txt
-
-deploy:
-  stage: deploy
-  script:
-    - ls
-    - cat control.txt
-
-
-
-```
-
-### Passing 3: artifacts (+ommitting test - stage) 
-
-  * You can decide in which state you need the artifacts 
-
-```
-## only change in stage: build 
-image: ubuntu:20.04
-
-## stages are set to build, test, deploy by default 
-
-build:
-  stage: build
-  script:
-    - echo "in building..." >> ./control.txt
-  artifacts:
-    paths:
-    - control.txt
-    expire_in: 1 week
-
-my_unit_test:
-  stage: test
-  dependencies: []
-  script:
-    - ls -la 
-    - echo "no control.txt here"
-    - ls -la 
-
-deploy:
-  stage: deploy
-  script:
-    - ls
-    - cat control.txt
-```
-
-
-### Using the gitlab - artifacts api 
-
-
-
-#### API - Reference:
-
-  * https://docs.gitlab.com/ee/api/job_artifacts.html
-
-
-
-### Reference:
-
-  * https://docs.gitlab.com/ee/ci/pipelines/job_artifacts.html
-
-## gitlab ci/cd (Praxis II)
-
-### Mehrzeile Kommandos in gitlab ci-cd ausführen
-
-
-### Step 1: 
-
- * Create new repo
-
-### Step 2: create good.sh next to README.md
-
-  * Create file good.sh in repo root-level 
-
-```
-##!/bin/bash
-
-echo "good things start now"
-ls -la
-date
-```
-
-### Step 3: create gitlab-ci.yml with Pipeline Editor 
-
-```
-stages:
-  - build 
-
-workflow:
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "web"
-
-build-stage:
-  stage: build
-  variables:
-    CMD: |
-      echo hello-you; 
-      ls -la;
-  script: 
-  - echo "execute script from git repo"
-  - bash -s < good.sh
-  - echo -n $CMD
-  - echo "eval the command"
-  - bash -c "$CMD"
-  - |-
-      bash -s << HEREDOC
-        echo hello 
-        ls -la
-      HEREDOC
-  - |
-      tr a-z A-Z << END_TEXT
-        one two three
-        four five six
-      END_TEXT 
-  - |
-      bash -s << HEREDOC
-        echo hello 
-        ls -la
-      HEREDOC
-  - |-
-      tr a-z A-Z << END_TEXT
-        one two three
-        four five six
-      END_TEXT
-  - >
-      echo "First command line
-      is split over two lines."
-
-      echo "Second command line."
- 
-
-```
-
-### Run Pipeline (need to trigger manually) 
-
-
-
-### Reference 
-
-
-### Reference:
-
-  * https://docs.gitlab.com/ee/ci/yaml/script.html#split-long-commands
-  * https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines/21699210#21699210
-
-### Kommandos auf Zielsystem mit ssh ausführen (auch multiline)
-
-
-### Preparation on Server 
-
-#### Step 1: Create public/private key 
-
-```
-## on destinationn server
-ssh-keygen
-cd .ssh
-ls -la
-```
-
-#### Step 2: Add id_rsa.pub /Public key to authorized_keys 
-
-```
-cat id_rsa.pub >> authorized_keys
-```
-
-#### Step 3: Add id_rsa (private key) to GITLAB ci/cd -> Settings -> CI/CD as new Variable 
-```
-cat id_rsa
-## copy content and add as content to new variable SERVER_SSH_KEY
-## DO not set variable as protected 
-```
-
-### create good.sh in root-folder of repo (git) 
-
-```
-##!/bin/bash
-
-echo "good things start now"
-ls -la
-date
-
-```
-
-### Create gitlab-ci.yml 
-
-```
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-
-stages:          # List of stages for jobs, and their order of execution
-  - deploy 
-  
-deploy-job:
-  
-   stage: deploy   
-   image: ubuntu 
-
-   variables:
-    CMD: |
-      echo hello-you; 
-      ls -la;
-
-   before_script:
-    - apt -y update
-    - apt install -y openssh-client
-    - eval $(ssh-agent -s)
-    - echo "$SERVER_SSH_KEY" | tr -d '\r' | ssh-add -
-    - ls -la
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-##- echo $SERVER_SSH_KEY
-
-   script:
-     - echo 'V1 - commands in line'
-     ############### ! Important 
-     # For ssh to exit on error, start your commands with first command set -e 
-     # - This will exit the executed on error with return - code > 0
-     # - AND will throw an error from ssh and in pipeline  
-     ###############
-     - ssh root@$SERVER_IP -C "set -e; ls -la; cd $SERVER_WEBDIR; ls -la;"
-     - echo 'V2 - content of Variable $CMD'
-     - ssh root@$SERVER_IP -C $CMD
-     - echo 'V3 - script locally - executed remotely'
-     - ssh root@$SERVER_IP < good.sh
-     - echo 'V4 - script in heredoc'
-     - |
-      ssh root@$SERVER_IP bash -s << HEREDOC
-        echo "hello V4"
-        ls -la
-      HEREDOC
-     - echo 'V5 - copy script and execute'
-     - scp good.sh root@$SERVER_IP:/usr/local/bin/better.sh
-     - ssh root@$SERVER_IP -C "chmod u+x /usr/local/bin/better.sh; better.sh"
-
-```
-
 ## gitlab-ci/cd - Workflows
 
 ### Workflows + only start by starting pipeline
@@ -1177,7 +2961,8 @@ workflow:
 build-stage:
   stage: build  
   script: 
-    - echo "hello build" 
+    - echo "hello build"
+    - echo "$CI_PIPELINE_SOURCE"
 
 ```
 
@@ -1670,68 +3455,6 @@ deploy_job:
     - echo "i am good to go"
     - sleep 30
 
-```
-
-## gitlab ci/cd docker
-
-### Docker image automatisiert bauen - gitlab registry
-
-
-### good.sh 
-
-```
-##!/bin/bash
-date
-```
-
-### Dockerfile - RootLevel 
-
-```
-FROM ubuntu:22.04
-## 
-RUN  apt-get update && \
-     apt-get install -y openssh-client  && \
-     rm -rf /var/lib/apt/lists/*
-COPY good.sh /usr/local/bin/better.sh
-```
-
-### Variante 1:  .gitlab-ci.yml (Version with docker-dind (docker-in-docker)
-
-```
-stages:          # List of stages for jobs, and their order of execution
-  - build
-
-build-image:       # This job runs in the build stage, which runs first.
-  stage: build
-  image: docker:20.10.10
-  services:
-     - docker:20.10.10-dind
-  script:
-    - echo "user:"$CI_REGISTRY_USER
-    - echo "pass:"$CI_REGISTRY_PASSWORD
-    - echo "registry:"$CI_REGISTRY
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-    - docker build -t $CI_REGISTRY_IMAGE .
-    - docker images
-    - docker push $CI_REGISTRY_IMAGE
-    - echo "BUILD for $CI_REGISTRY_IMAGE done"
-```
-
-### Variante 2: kaniko (rootless from google) 
-
-```
-build:
-  stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:v1.9.0-debug
-    entrypoint: [""]
-  script:
-    - /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
-  rules:
-    - if: $CI_COMMIT_TAG
 ```
 
 ## gitlab ci/cd docker compose
