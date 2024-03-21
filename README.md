@@ -129,10 +129,6 @@
   1. Hintergründe
      * [Warum before_script ?](/gitlab/why-before-script.md)
      * [GIT_STRATEGY usw.](gitlab/git_strategy.md)
-  
-  1. gitlab ci/cd (Praxis II)
-     * [Mehrzeile Kommandos in gitlab ci-cd ausführen](/gitlab/jobs/script/multiline.md)
-     * [Kommandos auf Zielsystem mit ssh ausführen (auch multiline)](gitlab/jobs/script/ssh-multiline.md)
 
   1. gitlab-ci/cd - Workflows
      * [Workflows + only start by starting pipeline](/gitlab/global/workflow.md)
