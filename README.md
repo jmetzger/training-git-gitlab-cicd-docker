@@ -27,6 +27,9 @@
     
   1. git - exercises (merging)
      * [merge-conflict](merge-conflict.md)
+
+  1. git - mergetool
+     * [git mergetool](mergetools.md)
     
   1. gitlab ci/cd (Überblick)
      * [Architecture](/gitlab/architecture.md)
