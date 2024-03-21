@@ -57,3 +57,7 @@ build:
   rules:
     - if: $CI_COMMIT_TAG
 ```
+
+## Reference:
+
+  *  https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
