@@ -104,11 +104,25 @@
   1. gitlab-ci/cd - Workflows
      * [Workflows + only start by starting pipeline](/gitlab/global/workflow.md)
      * [Templates for branch and merge request workflow](workflow/templates-branch-merge-request-pipeline.md)
-
-
-    
-  1. Documentation
+      
+  1. Documentation (git)
      * [Suche in git](https://docs.gitlab.com/ee/user/search/)
+    
+  1. Documentation 
+     * [gitlab ci/cd predefined variables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
+     * [.gitlab-ci.yml Reference](https://docs.gitlab.com/ee/ci/yaml/)
+     * [Referenz: global -> workflow](https://docs.gitlab.com/ee/ci/yaml/#workflow)
+     * [Referenz: global -> default](https://docs.gitlab.com/ee/ci/yaml/#default)
+
+  1. Documentation - Includes
+     * [includes](https://docs.gitlab.com/ee/ci/yaml/includes.html)
+     * [includes -> rules](https://docs.gitlab.com/ee/ci/yaml/includes.html#use-rules-with-include)
+     * [includes -> rules -> variables](https://docs.gitlab.com/ee/ci/yaml/#rulesvariables)
+     * [includes -> templates -> override-configuration](https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values)
+     * [includes -> defaults](https://docs.gitlab.com/ee/ci/yaml/includes.html#use-default-configuration-from-an-included-configuration-file)
+    
+  1. Documentation - Instances Limits
+     * [applicaton limits](https://docs.gitlab.com/ee/administration/instance_limits.html)
 
 ## Backlog 
 
