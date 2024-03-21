@@ -108,7 +108,7 @@
   1. Documentation (git)
      * [Suche in git](https://docs.gitlab.com/ee/user/search/)
     
-  1. Documentation 
+  1. Documentation (gitlab)
      * [gitlab ci/cd predefined variables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
      * [.gitlab-ci.yml Reference](https://docs.gitlab.com/ee/ci/yaml/)
      * [Referenz: global -> workflow](https://docs.gitlab.com/ee/ci/yaml/#workflow)
