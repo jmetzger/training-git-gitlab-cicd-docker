@@ -27,6 +27,9 @@
     
   1. git - exercises (merging)
      * [merge-conflict](#merge-conflict)
+
+  1. git - mergetool
+     * [git mergetool](#git-mergetool)
     
   1. gitlab ci/cd (Überblick)
      * [Architecture](#architecture)
@@ -109,6 +112,13 @@
      * [Docker compose local testen](#docker-compose-local-testen)
      * [Docker compose über ssh](#docker-compose-über-ssh)
      * [Docker compose classic über scp](#docker-compose-classic-über-scp)
+
+  1. gitlab - ci/cd - Pipelines strukturieren / Templates 
+     * [Includes mit untertemplates](#includes-mit-untertemplates)
+     * [Parent/Child Pipeline](#parentchild-pipeline)
+     * [Multiproject Pipeline / Downstream](#multiproject-pipeline--downstream)
+     * [Vorgefertigte Templates verwenden](#vorgefertigte-templates-verwenden)
+     * [Arbeiten mit extend und anchor - Dinge wiederverwenden](#arbeiten-mit-extend-und-anchor---dinge-wiederverwenden)
       
   1. Documentation (git)
      * [Suche in git](https://docs.gitlab.com/ee/user/search/)
@@ -118,6 +128,9 @@
      * [.gitlab-ci.yml Reference](https://docs.gitlab.com/ee/ci/yaml/)
      * [Referenz: global -> workflow](https://docs.gitlab.com/ee/ci/yaml/#workflow)
      * [Referenz: global -> default](https://docs.gitlab.com/ee/ci/yaml/#default)
+    
+  1. Security
+     * [Container Scanning](#container-scanning)
 
   1. Documentation - Includes
      * [includes](https://docs.gitlab.com/ee/ci/yaml/includes.html)
@@ -381,6 +394,55 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 6. Change line1 in todo.txt 
 7. git add -A; git commit -am "change line1 in todo.txt in master" 
 8. git merge feature/4723 
+```
+
+## git - mergetool
+
+### git mergetool
+
+
+### Meld (Windows) - Install  
+
+  *  https://meldmerge.org/
+
+### Find out if mergetool meld is available 
+
+```
+## Important: close and reopen git bash before doing that 
+## you can try to see, if meld can be executed by simply typing "meld"
+
+git mergetool --tool-help
+```
+
+### Configure, when it is found by mergetool --tool-help 
+
+```
+## you have to be in a git project 
+git config --global merge.tool meld
+git config --global diff.tool meld
+git config --global mergetool.keepBackup false
+git config --list
+```
+
+### If not found bei mergetool --tool-help :: Configuration in Git for Windows (git bash) 
+
+```
+## you have to be in a git project 
+git config --global merge.tool meld
+git config --global diff.tool meld
+## Should be on Windows 10 
+git config --global mergetool.meld.path “/c/Users/Admin/AppData/Local/Programs/Meld/Meld.exe”
+## sometimes here 
+git config --global mergetool.meld.path "/c/Program Files/Meld/Meld.exe"
+## do not create an .orig - file before merge 
+git config --global mergetool.keepBackup false
+```  
+
+### How to use it 
+
+```
+## when you have conflict you can open the mergetool (graphical tool with )
+git mergetool
 ```
 
 ## gitlab ci/cd (Überblick)
@@ -2509,6 +2571,357 @@ deploy-job:
 
 #### Schritt 3: Pipeline manuell über pipeline menü starten 
 
+## gitlab - ci/cd - Pipelines strukturieren / Templates 
+
+### Includes mit untertemplates
+
+
+### Prerequisites 
+
+```
+1x main .gitlab-ci.yml
+
+1x project1/project1.gitlab-ci.yml
+1x project2/project2.gitlab-ci.yml
+```
+
+### Step 1a: gitlab-ci.yml (simple)
+
+```
+stages:          # List of stages for jobs, and their order of execution
+  - build
+
+include:
+   - project1/project1.gitlab-ci.yml
+   - project2/project2.gitlab-ci.yml
+
+
+```
+
+### Step 1b: gitlab-ci.yml (start with pipeline start and variable setting
+
+```
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+ 
+include:
+   - local: project1/project1.gitlab-ci.yml
+     rules:
+       - if: $BUILD_PROJECT1 == "true"
+
+   - local: project2/project2.gitlab-ci.yml
+     rules:
+       - if: $BUILD_PROJECT2 == "true"
+
+dummy-build:
+   stage: build
+   script:
+     - echo "dummy build"
+   rules:
+     - if: $BUILD_PROJECT1 != "true" && $BUILD_PROJECT2 != "true"
+
+
+```
+
+
+### Step 2: project1/project1.gitlab-ci.yml 
+
+```
+stages:
+  - build
+
+project1.build-job:
+  stage: build
+  script:
+    - echo "in project1 .. building"
+
+```
+
+### Step 3: project2/project2.gitlab-ci.yml 
+
+```
+stages:
+  - build
+
+project2.build-job:
+  stage: build
+  script:
+    - echo "in project2 .. building"
+```
+
+### Parent/Child Pipeline
+
+
+### Variante 1: gitlab-ci.yml (no subfolders) 
+
+```
+project1:
+  trigger:
+    include: project1/project1.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project1/*]
+project2:
+  trigger:
+    include: project2/project2.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project2/*]
+```
+
+### Variante 2: gitlab-ci.yml (with subfolders) 
+
+```
+project1:
+  trigger:
+    include: project1/project1.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project1/**/*]
+project2:
+  trigger:
+    include: project2/project2.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project2/**/*]
+```
+
+### Variante 3: gitlab-ci.yml (with subfolders ....) 
+
+  * Not able to be started on run pipeline (manually)
+  * But, when it is triggered on changes
+
+```
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: never
+    - when: always
+
+project1:
+  trigger:
+    include: project1/project1.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project1/**/*]
+project2:
+  trigger:
+    include: project2/project2.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project2/**/*]
+```
+
+
+### project1/project1.gitlab-ci.yml
+
+```
+stages:
+  - build
+
+project1.build-job:
+  stage: build
+  script:
+    - echo "in project1 .. building"
+    - echo $CI_PIPELINE_SOURCE
+```
+
+### project2/project2.gitlab-ci.yml
+
+```
+stages:
+  - build
+
+project2.build-job:
+  stage: build
+  script:
+    - echo "in project2 .. building"
+    - echo $CI_PIPELINE_SOURCE
+```
+
+### Alternative mit anderen stages in child 
+
+```
+stages:
+  - project1-build
+  - project1-test
+  - project1-deploy 
+
+
+project1.build-job:
+  stage: project1-build
+  script:
+    - echo "in project1 .. building"
+    - echo $CI_PIPELINE_SOURCE
+
+project1.test-job:
+  stage: project1-test
+  script:
+    - echo "in project1 .. test"
+    - echo $CI_PIPELINE_SOURCE
+
+project1.deploy-job:
+  stage: project1-deploy
+  script:
+    - echo "in project1 .. deploy"
+    - echo $CI_PIPELINE_SOURCE
+```
+
+
+
+### Refs:
+
+  * https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html
+
+### Multiproject Pipeline / Downstream
+
+
+### Practical Example (Variant 1)
+
+#### Trigger - job in .gitlab-ci.yml 
+
+```
+trigger_job:
+  trigger:
+    project: training.tn1/jochentest-multi1 # project/repo sonst geht es nicht (muss komplett angegeben werden) 
+    strategy: depend
+```
+
+#### New repo -> training.tn1/jochentest-multi1 
+
+```
+.gitlab-ci.yml
+```
+
+```
+## This is how my other project looks like 
+workflow:
+    rules:
+      - if: '$CI_PIPELINE_SOURCE == "web"'
+      - if: '$CI_PIPELINE_SOURCE == "pipeline"' # ein projekt gestart innerhalb multiproject - pipeline 
+
+default:
+  image: alpine
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Started"
+    - echo "Show us the pipeline source $CI_PIPELINE_SOURCE"
+```
+
+### Practical Example (Variant 2): Deploy after all Build triggers are done 
+
+```
+stages:
+  - build
+  - deploy
+
+project1:
+  stage: build
+  trigger:
+    include: project1/project1.gitlab-ci.yml
+    strategy: depend
+ # rules:
+ #   - changes: [project1/**/*]
+project2:
+  stage: build
+  trigger:
+    include: project2/project2.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - changes: [project2/**/*]
+
+trigger_job:
+  stage: build
+  trigger:
+    project: training.tn11/jochentest-multi2 # project/repo sonst geht es nicht (muss komplett angegeben werden) 
+    strategy: depend
+
+deploy_job:
+  stage: deploy
+  image: alpine
+  script: 
+    - echo "i am good to go"
+    - sleep 30
+
+```
+
+
+### Reference 
+
+  * https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Multi-project+pipeline
+
+### Vorgefertigte Templates verwenden
+
+
+### Step 1: Browser Template in Pipeline Editor (Top-Bottom) to find the one you want
+
+### Step 2: Include template in your gitlab-ci.yml - config
+
+```
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:          # List of stages for jobs, and their order of execution
+  - deploy 
+  - test
+
+include:
+  template: Jobs/Test.gitlab-ci.yml
+
+run-deploy:
+  stage: deploy
+  script:
+    - echo "deploy started"
+
+
+```
+
+### Arbeiten mit extend und anchor - Dinge wiederverwenden
+
+
+### Hinweis:
+
+ * Dinge, die wiederverwendet werden sollen, müssen vorher definiert sein, in der Datei
+ * d.h. .base vor myjob
+ * .default_scripts bzw &default_scripts vor Verwendung als *default_scripts 
+
+### gitlab-ci.yml 
+
+```
+.base:
+  variables:
+    TEST_CASE: "true"
+    VERSION: "1.0"
+
+.default_scripts: &default_scripts
+  - echo "from _default_scripts"
+  - echo "next default step"
+
+myjob:
+  variables:
+    TEST_CASE: 'bad'
+  extends: .base
+  script: 
+    - *default_scripts
+    - echo "in MYJOB"
+    - ls -la
+    - echo $TEST_CASE
+    - echo $VERSION
+
+```
+
+
 ## Documentation (git)
 
 ### Suche in git
@@ -2532,6 +2945,39 @@ deploy-job:
 ### Referenz: global -> default
 
   * https://docs.gitlab.com/ee/ci/yaml/#default
+
+## Security
+
+### Container Scanning
+
+
+### Walkthrough (Variant 1)
+
+```
+include:
+  - template: Security/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  variables:
+     CS_IMAGE: registry.gitlab.com/training.tn11/jochentest1:latest
+```
+
+### Walkthrough (Variant 2) - including building image 
+
+```
+include:
+  - template: Jobs/Build.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  variables:
+    CS_DEFAULT_BRANCH_IMAGE: $CI_REGISTRY_IMAGE/$CI_DEFAULT_BRANCH:$CI_COMMIT_SHA
+```
+
+
+### Ref:
+
+  * https://docs.gitlab.com/ee/user/application_security/container_scanning/
 
 ## Documentation - Includes
 
