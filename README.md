@@ -104,6 +104,11 @@
   1. gitlab-ci/cd - Workflows
      * [Workflows + only start by starting pipeline](/gitlab/global/workflow.md)
      * [Templates for branch and merge request workflow](workflow/templates-branch-merge-request-pipeline.md)
+    
+  1. gitlab ci/cd docker compose
+     * [Docker compose local testen](gitlab/docker-compose/01-docker-compose-local-testen.md)
+     * [Docker compose über ssh](gitlab/docker-compose/02-docker-compose-ssh.md)
+     * [Docker compose classic über scp](gitlab/docker-compose/03-docker-compose-rollout-classic.md)
       
   1. Documentation (git)
      * [Suche in git](https://docs.gitlab.com/ee/user/search/)
