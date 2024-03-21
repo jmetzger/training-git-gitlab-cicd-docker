@@ -18,7 +18,8 @@ workflow:
 build-stage:
   stage: build  
   script: 
-    - echo "hello build" 
+    - echo "hello build"
+    - echo "$CI_PIPELINE_SOURCE"
 
 ```
 
