@@ -1,8 +1,11 @@
 ### Wordpress - blog mit docker compose (Walkthrough)
 
 ```
-mkdir wordpress-mit-docker-compose 
-cd wordpress-mit-docker-compose 
+mkdir wmdc
+cd wmdc
+```
+
+```
 # nano docker-compose.yml 
 version: "3.7"
 
